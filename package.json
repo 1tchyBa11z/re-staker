@@ -1,16 +1,17 @@
 {
-	"name": "re-staker",
-	"version": "1.0.0",
-	"description": "This Bot will compound your STAKER accounts, it checks every 10 minutes in case the available amount is over 1.1 Staker. If it is, it gets compounded.",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"author": "1tchyBa11z & Krampus",
-	"license": "BSD",
-	"dependencies": {
-		"axios": "^0.21.1",
-		"dotenv": "^10.0.0",
-		"web3": "^1.5.0"
-	}
+        "name": "re-staker",
+        "version": "1.0.0",
+        "description": "This Bot will compound your STAKER accounts, it checks every 10 minutes in case the available amount is over 1.1 Staker. If it is, it gets compounded.",
+        "main": "index.js",
+        "scripts": {
+                "test": "echo \"Error: no test specified\" && exit 1"
+        },
+        "author": "1tchyBa11z & Krampus",
+        "license": "BSD",
+        "dependencies": {
+                "axios": "^0.21.1",
+                "dotenv": "^10.0.0",
+                "mathjs": "^10.5.1",
+                "web3": "^1.5.0"
+        }
 }

@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config()
 const Web3 = require('web3')
+const math = require('mathjs');
 
 function shortId(str, size) {
         return str.substr(0, 6) + '...' + str.substr(36,42);
@@ -24,7 +25,6 @@ console.log("If you find this script useful, consider donating to the developers
 
 console.log(`Polling time: ${POLLING_INTERVAL / 60000} minutes`);
 
-P.forEach(element => {
         //SMART CONTRACT ABI
         const ABI = [
     {
@@ -1831,23 +1831,26 @@ P.forEach(element => {
         //Contract objects
         const contract = new web3.eth.Contract(ABI, Faucet_Contract)
 
+P.forEach(element => {
         var wallet = web3.eth.accounts.wallet.add(P[i]);
         let currently_compounding = false
         async function checkRollAvailability(){
                 if(currently_compounding) return
                 try{
                         const claimsAvailable = await contract.methods.claimsAvailable(wallet.address).call()
+                        var gasPrice = await web3.eth.getGasPrice();
+                        var block = await web3.eth.getBlock("latest");
+                        var gasLimit = math.floor(block.gasLimit/block.transactions.length);
 
-                        var gasLimit = 400000
-                        var gasPrice = await web3.eth.getGasPrice()
-                        const txCost = web3.utils.fromWei(gasPrice.toString(),'ether') * gasLimit
-//                        console.log('Total gas cost: ', txCost)
+//                        var gasPrice = await web3.eth.getGasPrice()
+                        const txCost = gasPrice * gasLimit
+                        console.log('Total gas cost: ', txCost)
 
                         // if over 0.5 STAKER available, hydrate
                         if(claimsAvailable > 1111100000000000000) {
                                 console.log(`Time to compound ${web3.utils.fromWei(claimsAvailable.toString(),'ether')} STAKER!, ${shortId(wallet.address)}`)
                                 currently_compounding = true;
- //                               console.log(`gas Price: ${gasPrice}`)
+                               console.log(`gas Price: ${gasPrice}`)
                                 compound()
                                 setTimeout(() => 1000);
                         }
@@ -1855,7 +1858,7 @@ P.forEach(element => {
 //                                console.log(`Not ready to compound ${web3.utils.fromWei(claimsAvailable.toString(),'ether')} STAKER, ${shortId(wallet.address)}`)
                         }
                 } catch (err){
-                        console.log(`Didn't roll any Staker (err, ${shortId(wallet.address)})`)
+                        console.log(`Didn't roll any Staker (${err.message}, ${shortId(wallet.address)})`)
                         return
                 }
 
